@@ -16,28 +16,35 @@ public class StudentService implements UserService<Student> {
 
 
     @Override
+    public Optional<Student> getUserById(Long id) {
+        return this.studentRepository.findById(id);
+    }
+
+    @Override
     public Optional<Student> getUserByEmail(String email) {
         return this.studentRepository.findByEmail(email);
     }
 
     @Override
-    public Optional<Student> createUser(BaseUser user) {
+    public void createUser(BaseUser user) {
         Student newStudent = new Student();
         newStudent.setEmail(user.getEmail());
         newStudent.setPassword(user.getPassword());
         newStudent.setUserRole(user.getUserRole());
 
-        return Optional.of(this.studentRepository.save(newStudent));
+        this.studentRepository.save(newStudent);
     }
 
     @Override
-    public Optional<Student> updateUser(Student user) {
-        Student updatedStudent = new Student();
-        updatedStudent.setEmail(user.getEmail());
-        updatedStudent.setPassword(user.getPassword());
-        this.studentRepository.save(updatedStudent);
+    public Optional<Student> updateUser(Long userId, Student user) {
+        Optional<Student> student = studentRepository.findById(userId);
 
-        return Optional.of(updatedStudent);
+        if(student.isPresent()) {
+            student.get().setEmail(user.getEmail());
+            student.get().setPassword(user.getPassword());
+        }
+
+        return student;
     }
 
     @Override

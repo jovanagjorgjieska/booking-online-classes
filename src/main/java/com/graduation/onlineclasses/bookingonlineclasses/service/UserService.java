@@ -6,11 +6,12 @@ import java.util.Optional;
 
 public interface UserService<T extends BaseUser> {
 
+    Optional<T> getUserById(Long id);
     Optional<T> getUserByEmail (String email);
 
-    Optional<T> createUser (BaseUser user);
+    void createUser (BaseUser user);
 
-    Optional<T> updateUser (T user);
+    Optional<T> updateUser (Long userId, T user);
 
     T deleteUser(Long userId);
 }
