@@ -1,5 +1,6 @@
 package com.graduation.onlineclasses.bookingonlineclasses.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,7 +20,8 @@ public class Teacher extends BaseUser {
 
     private String occupation;
 
-    @OneToMany
+    @JsonIgnore
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
     private List<Course> courses;
 
     @OneToMany

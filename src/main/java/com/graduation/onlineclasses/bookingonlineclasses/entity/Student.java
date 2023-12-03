@@ -14,5 +14,5 @@ public class Student extends BaseUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long teacherId;
+    private Long studentId;
 }

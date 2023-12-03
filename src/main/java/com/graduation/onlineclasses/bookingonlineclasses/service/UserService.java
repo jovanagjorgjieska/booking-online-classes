@@ -9,7 +9,7 @@ public interface UserService<T extends BaseUser> {
     Optional<T> getUserById(Long id);
     Optional<T> getUserByEmail (String email);
 
-    void createUser (BaseUser user);
+    T createUser (BaseUser user);
 
     Optional<T> updateUser (Long userId, T user);
 

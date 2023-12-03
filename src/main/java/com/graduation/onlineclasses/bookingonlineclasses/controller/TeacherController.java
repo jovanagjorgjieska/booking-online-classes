@@ -1,5 +1,6 @@
 package com.graduation.onlineclasses.bookingonlineclasses.controller;
 
+import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.CourseDTO;
 import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.TeacherDTO;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Course;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Teacher;
@@ -61,18 +62,24 @@ public class TeacherController {
 
     @GetMapping("/{teacherId}/courses")
     public ResponseEntity<List<Course>> getTeacherCourses(@PathVariable Long teacherId) {
-        List<Course> teacherCourses = this.courseService.getAllCoursesForTeacher(teacherId);
-        return ResponseEntity.ok(teacherCourses);
+        return ResponseEntity.ok(this.teacherService.getAllCoursesForTeacher(teacherId));
     }
 
     @GetMapping("/{teacherId}/courses/{courseId}")
     public ResponseEntity<?> getCourse(@PathVariable Long teacherId, @PathVariable Long courseId) {
         try {
-            Course fetchedCourse = this.courseService.getCourse(courseId)
+            Course fetchedCourse = this.teacherService.getTeachersCourse(teacherId, courseId)
                     .orElseThrow(() -> new CourseNotFoundException(courseId));
             return ResponseEntity.ok(fetchedCourse);
         } catch (CourseNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }
+
+    @PostMapping("/{teacherId}/courses")
+    public ResponseEntity<Course> addCourse(@PathVariable Long teacherId, @RequestBody CourseDTO courseDTO) {
+        Course addedCourse = this.courseService.addCourse(teacherId, courseDTO);
+
+        return new ResponseEntity<>(addedCourse, HttpStatus.CREATED);
     }
 }

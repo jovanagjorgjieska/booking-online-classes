@@ -1,6 +1,8 @@
 package com.graduation.onlineclasses.bookingonlineclasses.controller;
 
 import com.graduation.onlineclasses.bookingonlineclasses.entity.BaseUser;
+import com.graduation.onlineclasses.bookingonlineclasses.entity.Student;
+import com.graduation.onlineclasses.bookingonlineclasses.entity.Teacher;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.UserRole;
 import com.graduation.onlineclasses.bookingonlineclasses.service.StudentService;
 import com.graduation.onlineclasses.bookingonlineclasses.service.TeacherService;
@@ -21,12 +23,13 @@ public class UserController {
     private final StudentService studentService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody BaseUser user) {
+    public ResponseEntity<?> registerUser(@RequestBody BaseUser user) {
         if (user.getUserRole().equals(UserRole.STUDENT)) {
-            this.studentService.createUser(user);
+            Student createdStudent = this.studentService.createUser(user);
+            return new ResponseEntity<>(createdStudent, HttpStatus.CREATED);
         } else {
-            this.teacherService.createUser(user);
+            Teacher createdTeacher = this.teacherService.createUser(user);
+            return new ResponseEntity<>(createdTeacher, HttpStatus.CREATED);
         }
-        return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
     }
 }

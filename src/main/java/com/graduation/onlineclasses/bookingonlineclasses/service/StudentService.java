@@ -26,13 +26,15 @@ public class StudentService implements UserService<Student> {
     }
 
     @Override
-    public void createUser(BaseUser user) {
+    public Student createUser(BaseUser user) {
         Student newStudent = new Student();
         newStudent.setEmail(user.getEmail());
         newStudent.setPassword(user.getPassword());
         newStudent.setUserRole(user.getUserRole());
 
         this.studentRepository.save(newStudent);
+
+        return newStudent;
     }
 
     @Override
