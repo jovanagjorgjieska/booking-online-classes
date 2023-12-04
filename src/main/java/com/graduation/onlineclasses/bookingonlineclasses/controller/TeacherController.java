@@ -82,4 +82,28 @@ public class TeacherController {
 
         return new ResponseEntity<>(addedCourse, HttpStatus.CREATED);
     }
+
+    @PutMapping("/{teacherId}/courses/{courseId}")
+    public ResponseEntity<?> editTeachersCourse (@PathVariable Long teacherId, @PathVariable Long courseId, @RequestBody CourseDTO courseDTO) {
+        try {
+            Course course = this.courseService.editCourse(courseId, courseDTO)
+                    .orElseThrow(() -> new CourseNotFoundException(courseId));
+
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(course.getCourseId())
+                    .toUri();
+            return ResponseEntity.created(location).body(course);
+        } catch (CourseNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+
+    @DeleteMapping("/{teacherId}/courses/{courseId}")
+    public ResponseEntity<String> deleteCourse(@PathVariable Long teacherId, @PathVariable Long courseId) {
+        this.courseService.deleteCourse(courseId);
+        return new ResponseEntity<>("Course deleted successfully!", HttpStatus.NO_CONTENT);
+    }
 }

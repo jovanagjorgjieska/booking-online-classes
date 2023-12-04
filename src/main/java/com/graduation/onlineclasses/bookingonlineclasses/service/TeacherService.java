@@ -64,6 +64,7 @@ public class TeacherService implements UserService<Teacher> {
         return teacher;
     }
 
+    //TODO: Modify the implementation of this method
     @Override
     public Teacher deleteUser(Long userId) {
         Optional<Teacher> teacherToRemove = this.teacherRepository.findById(userId);

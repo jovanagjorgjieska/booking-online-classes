@@ -3,6 +3,7 @@ package com.graduation.onlineclasses.bookingonlineclasses.service;
 import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.CourseDTO;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Course;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Teacher;
+import com.graduation.onlineclasses.bookingonlineclasses.exception.CourseNotFoundException;
 import com.graduation.onlineclasses.bookingonlineclasses.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,15 +19,8 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final TeacherService teacherService;
 
-    //TODO: Change the implementation of this method. Maybe it's better to fetch the courses from Teacher entity
-    public List<Course> getAllCoursesForTeacher(Long teacherId) {
-        Optional<Teacher> teacher = this.teacherService.getUserById(teacherId);
-
-        if (teacher.isPresent()) {
-            return this.courseRepository.findAllByTeacher(teacher.get());
-        } else {
-            return new ArrayList<>();
-        }
+    public List<Course> getAllCourses() {
+        return this.courseRepository.findAll();
     }
 
     public Optional<Course> getCourse(Long courseId) {
@@ -49,11 +43,35 @@ public class CourseService {
         return course;
     }
 
-    public Optional<Course> editCourse(Long courseId) {
-        return Optional.of(new Course());
+    public Optional<Course> editCourse(Long courseId, CourseDTO courseDTO) {
+        Optional<Course> course = this.courseRepository.findById(courseId);
+
+        if (course.isPresent()) {
+            if (courseDTO.getCourseName() != null) {
+                course.get().setCourseName(courseDTO.getCourseName());
+            }
+            if (courseDTO.getDescription() != null) {
+                course.get().setDescription(courseDTO.getDescription());
+            }
+            if (courseDTO.getPrice() != null) {
+                course.get().setPrice(courseDTO.getPrice());
+            }
+            if (courseDTO.getAvailablePositions() != null) {
+                course.get().setAvailablePositions(courseDTO.getAvailablePositions());
+            }
+
+            this.courseRepository.save(course.get());
+        }
+
+        return course;
     }
 
-    public Course deleteCourse(Long courseId) {
-        return new Course();
+    public void deleteCourse(Long courseId) {
+        Optional<Course> course = this.courseRepository.findById(courseId);
+        if (course.isPresent()) {
+            this.courseRepository.delete(course.get());
+        } else {
+            throw new CourseNotFoundException(courseId);
+        }
     }
 }
