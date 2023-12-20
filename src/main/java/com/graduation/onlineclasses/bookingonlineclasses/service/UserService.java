@@ -11,7 +11,7 @@ public interface UserService<T extends BaseUser> {
 
     T createUser (BaseUser user);
 
-    Optional<T> updateUser (Long userId, T user);
+    T updateUser (Long userId, T user);
 
-    T deleteUser(Long userId);
+    void deleteUser(Long userId);
 }

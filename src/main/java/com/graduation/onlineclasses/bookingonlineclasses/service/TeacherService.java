@@ -3,6 +3,7 @@ package com.graduation.onlineclasses.bookingonlineclasses.service;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.BaseUser;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Course;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Teacher;
+import com.graduation.onlineclasses.bookingonlineclasses.exception.CourseNotFoundException;
 import com.graduation.onlineclasses.bookingonlineclasses.exception.TeacherNotFoundException;
 import com.graduation.onlineclasses.bookingonlineclasses.repository.TeacherRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,13 +36,11 @@ public class TeacherService implements UserService<Teacher> {
         newTeacher.setPassword(user.getPassword());
         newTeacher.setUserRole(user.getUserRole());
 
-        this.teacherRepository.save(newTeacher);
-
-        return newTeacher;
+        return this.teacherRepository.save(newTeacher);
     }
 
     @Override
-    public Optional<Teacher> updateUser(Long userId, Teacher user) {
+    public Teacher updateUser(Long userId, Teacher user) {
         Optional<Teacher> teacher = this.teacherRepository.findById(userId);
 
         if(teacher.isPresent()) {
@@ -58,18 +57,20 @@ public class TeacherService implements UserService<Teacher> {
                 teacher.get().setOccupation(user.getOccupation());
             }
 
-            this.teacherRepository.save(teacher.get());
+            return this.teacherRepository.save(teacher.get());
+        } else {
+            throw new TeacherNotFoundException(userId);
         }
-
-        return teacher;
     }
 
-    //TODO: Modify the implementation of this method
     @Override
-    public Teacher deleteUser(Long userId) {
+    public void deleteUser(Long userId) {
         Optional<Teacher> teacherToRemove = this.teacherRepository.findById(userId);
-
-        return teacherToRemove.orElse(null);
+        if(teacherToRemove.isPresent()) {
+            this.teacherRepository.delete(teacherToRemove.get());
+        } else {
+            throw new TeacherNotFoundException(userId);
+        }
     }
 
     public List<Teacher> getAllTeachers() {
@@ -85,19 +86,19 @@ public class TeacherService implements UserService<Teacher> {
         }
     }
 
-    public Optional<Course> getTeachersCourse(Long teacherId, Long courseId) {
+    public Course getTeachersCourse(Long teacherId, Long courseId) {
         Optional<Teacher> teacher = this.teacherRepository.findById(teacherId);
 
         if(teacher.isPresent()) {
             List<Course> courses = teacher.get().getCourses();
-            for(Course c: courses) {
-                if(Objects.equals(c.getCourseId(), courseId)) {
-                    return Optional.of(c);
+            for(Course course: courses) {
+                if(Objects.equals(course.getCourseId(), courseId)) {
+                    return course;
                 }
             }
         } else {
             throw new TeacherNotFoundException(teacherId);
         }
-        return Optional.empty();
+        throw new CourseNotFoundException(courseId);
     }
 }

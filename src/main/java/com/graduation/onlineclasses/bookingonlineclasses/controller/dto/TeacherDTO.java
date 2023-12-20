@@ -1,8 +1,10 @@
 package com.graduation.onlineclasses.bookingonlineclasses.controller.dto;
 
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
+@Data
+@Builder
 public class TeacherDTO {
 
     private String email;

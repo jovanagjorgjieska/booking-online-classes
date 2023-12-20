@@ -2,6 +2,7 @@ package com.graduation.onlineclasses.bookingonlineclasses.service;
 
 import com.graduation.onlineclasses.bookingonlineclasses.entity.BaseUser;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Student;
+import com.graduation.onlineclasses.bookingonlineclasses.exception.TeacherNotFoundException;
 import com.graduation.onlineclasses.bookingonlineclasses.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,20 +39,22 @@ public class StudentService implements UserService<Student> {
     }
 
     @Override
-    public Optional<Student> updateUser(Long userId, Student user) {
+    public Student updateUser(Long userId, Student user) {
         Optional<Student> student = studentRepository.findById(userId);
 
         if(student.isPresent()) {
             student.get().setEmail(user.getEmail());
             student.get().setPassword(user.getPassword());
-        }
 
-        return student;
+            return studentRepository.save(student.get());
+        } else {
+            //TODO: Make new StudentNotFoundException !
+            throw new TeacherNotFoundException(userId);
+        }
     }
 
     @Override
-    public Student deleteUser(Long userId) {
+    public void deleteUser(Long userId) {
         Optional<Student> studentToRemove = this.studentRepository.findById(userId);
-        return studentToRemove.orElse(null);
     }
 }

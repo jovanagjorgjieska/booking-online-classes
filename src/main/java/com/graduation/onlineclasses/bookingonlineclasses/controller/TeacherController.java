@@ -45,20 +45,22 @@ public class TeacherController {
 
     @PutMapping("/{teacherId}")
     public ResponseEntity<?> editTeacher(@PathVariable Long teacherId, @RequestBody TeacherDTO teacherDTO) {
-        try {
-            Teacher teacher = this.teacherService.updateUser(teacherId, teacherMapper.mapFromTeacherDtoToTeacher(teacherDTO))
-                    .orElseThrow(() -> new TeacherNotFoundException(teacherId));
+        Teacher teacher = this.teacherService.updateUser(teacherId, teacherMapper.mapFromTeacherDtoToTeacher(teacherDTO));
 
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(teacher.getTeacherId())
-                    .toUri();
-            return ResponseEntity.created(location).body(teacher);
-        } catch (TeacherNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(teacher.getTeacherId())
+                .toUri();
+        return ResponseEntity.created(location).body(teacher);
     }
+
+    @DeleteMapping("/{teacherId}")
+    public ResponseEntity<String> deleteTeacher(@PathVariable Long teacherId) {
+        this.teacherService.deleteUser(teacherId);
+        return new ResponseEntity<>("Teacher deleted successfully!", HttpStatus.NO_CONTENT);
+    }
+
 
     @GetMapping("/{teacherId}/courses")
     public ResponseEntity<List<Course>> getTeacherCourses(@PathVariable Long teacherId) {
@@ -67,13 +69,7 @@ public class TeacherController {
 
     @GetMapping("/{teacherId}/courses/{courseId}")
     public ResponseEntity<?> getCourse(@PathVariable Long teacherId, @PathVariable Long courseId) {
-        try {
-            Course fetchedCourse = this.teacherService.getTeachersCourse(teacherId, courseId)
-                    .orElseThrow(() -> new CourseNotFoundException(courseId));
-            return ResponseEntity.ok(fetchedCourse);
-        } catch (CourseNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok(this.teacherService.getTeachersCourse(teacherId, courseId));
     }
 
     @PostMapping("/{teacherId}/courses")
