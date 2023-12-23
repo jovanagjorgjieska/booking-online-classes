@@ -26,13 +26,7 @@ public class CourseController {
     }
 
     @GetMapping("/{courseId}")
-    public ResponseEntity<?> getCourse(@PathVariable Long courseId) {
-        try {
-            Course fetchedCourse = this.courseService.getCourse(courseId)
-                    .orElseThrow(() -> new CourseNotFoundException(courseId));
-            return ResponseEntity.ok(fetchedCourse);
-        } catch (CourseNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<Course> getCourse(@PathVariable Long courseId) {
+        return ResponseEntity.ok(this.courseService.getCourse(courseId));
     }
 }

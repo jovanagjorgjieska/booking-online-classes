@@ -1,11 +1,11 @@
 package com.graduation.onlineclasses.bookingonlineclasses.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -15,4 +15,8 @@ public class Student extends BaseUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long studentId;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<Booking> bookings;
 }

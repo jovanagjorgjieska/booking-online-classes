@@ -1,7 +1,10 @@
 package com.graduation.onlineclasses.bookingonlineclasses.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -24,4 +27,8 @@ public class Course {
     private Integer availablePositions;
 
     private Double price;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    private List<Booking> bookings;
 }

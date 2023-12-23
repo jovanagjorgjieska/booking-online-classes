@@ -29,4 +29,11 @@ public class CustomExceptionHandler {
     String studentNotFoundException(StudentNotFoundException e) {
         return e.getMessage();
     }
+
+    @ResponseBody
+    @ExceptionHandler(BookingNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    String bookingNotFoundException(BookingNotFoundException e) {
+        return e.getMessage();
+    }
 }

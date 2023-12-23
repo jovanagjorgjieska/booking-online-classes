@@ -22,8 +22,9 @@ public class CourseService {
         return this.courseRepository.findAll();
     }
 
-    public Optional<Course> getCourse(Long courseId) {
-        return this.courseRepository.findById(courseId);
+    public Course getCourse(Long courseId) {
+        return this.courseRepository.findById(courseId)
+                .orElseThrow(() -> new CourseNotFoundException(courseId));
     }
 
     public Course addCourse(Long teacherId, CourseDTO courseDTO) {
@@ -74,5 +75,12 @@ public class CourseService {
         } else {
             throw new CourseNotFoundException(courseId);
         }
+    }
+
+    public void changeCourseAvailableAndBookedPositions(Long courseId, Integer availablePositions, Integer bookedPositions) {
+        Course course = this.getCourse(courseId);
+
+        course.setAvailablePositions(availablePositions);
+        this.courseRepository.save(course);
     }
 }
