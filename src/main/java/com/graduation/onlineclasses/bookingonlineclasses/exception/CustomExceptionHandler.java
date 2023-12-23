@@ -22,4 +22,11 @@ public class CustomExceptionHandler {
     String courseNotFoundException(CourseNotFoundException e) {
         return e.getMessage();
     }
+
+    @ResponseBody
+    @ExceptionHandler(StudentNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    String studentNotFoundException(StudentNotFoundException e) {
+        return e.getMessage();
+    }
 }

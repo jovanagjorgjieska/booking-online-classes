@@ -2,12 +2,10 @@ package com.graduation.onlineclasses.bookingonlineclasses.service;
 
 import com.graduation.onlineclasses.bookingonlineclasses.entity.BaseUser;
 
-import java.util.Optional;
-
 public interface UserService<T extends BaseUser> {
 
-    Optional<T> getUserById(Long id);
-    Optional<T> getUserByEmail (String email);
+    T getUserById(Long id);
+    T getUserByEmail (String email);
 
     T createUser (BaseUser user);
 

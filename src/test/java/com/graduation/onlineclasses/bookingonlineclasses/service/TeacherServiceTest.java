@@ -34,33 +34,48 @@ public class TeacherServiceTest {
 
     @Test
     public void getUserByIdTest() {
-
         Teacher mockTeacher = createMockTeacher();
 
         when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(mockTeacher));
 
-        Optional<Teacher> result = classUnderTest.getUserById(TEST_ID);
+        Teacher result = classUnderTest.getUserById(TEST_ID);
 
         assertAll(
-                () -> assertTrue(result.isPresent()),
-                () -> assertEquals(TEST_ID, result.get().getTeacherId())
+                () -> assertNotNull(result),
+                () -> assertEquals(TEST_ID, result.getTeacherId())
         );
     }
 
     @Test
-    public void getUserByEmailTest() {
+    public void getUserByIdTest_TeacherDoesNotExist() {
 
+        when(teacherRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThrows(TeacherNotFoundException.class,
+                () -> classUnderTest.getUserById(TEST_ID));
+    }
+
+    @Test
+    public void getUserByEmailTest() {
         Teacher mockTeacher = createMockTeacher();
         mockTeacher.setEmail(TEST_EMAIL);
 
         when(teacherRepository.findByEmail(anyString())).thenReturn(Optional.of(mockTeacher));
 
-        Optional<Teacher> result = classUnderTest.getUserByEmail(TEST_EMAIL);
+        Teacher result = classUnderTest.getUserByEmail(TEST_EMAIL);
 
         assertAll(
-                () -> assertTrue(result.isPresent()),
-                () -> assertEquals(TEST_EMAIL, result.get().getEmail())
+                () -> assertNotNull(result),
+                () -> assertEquals(TEST_EMAIL, result.getEmail())
         );
+    }
+
+    @Test
+    public void getUserByEmail_TeacherDoesNotExist() {
+        when(teacherRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+
+        assertThrows(TeacherNotFoundException.class,
+                () -> classUnderTest.getUserByEmail(TEST_EMAIL));
     }
 
     @Test
@@ -112,7 +127,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    public void updateUser_throwsException() {
+    public void updateUser_TeacherDoesNotExist() {
         when(teacherRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(TeacherNotFoundException.class,
@@ -132,7 +147,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    public void deleteUserTest_throwsException() {
+    public void deleteUserTest_TeacherDoesNotExist() {
         when(teacherRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(TeacherNotFoundException.class,

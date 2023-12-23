@@ -28,9 +28,9 @@ public class CourseService {
 
     public Course addCourse(Long teacherId, CourseDTO courseDTO) {
         Course course = new Course();
-        Optional<Teacher> teacher = this.teacherService.getUserById(teacherId);
+        Teacher teacher = this.teacherService.getUserById(teacherId);
 
-        teacher.ifPresent(course::setTeacher);
+        course.setTeacher(teacher);
         course.setCourseName(courseDTO.getCourseName());
         course.setDescription(courseDTO.getDescription());
         course.setBookedPositions(0);
@@ -42,7 +42,8 @@ public class CourseService {
         return course;
     }
 
-    public Optional<Course> editCourse(Long courseId, CourseDTO courseDTO) {
+    //TODO: Add validation here, check if the course belongs to the teacher
+    public Course editCourse(Long teacherId, Long courseId, CourseDTO courseDTO) {
         Optional<Course> course = this.courseRepository.findById(courseId);
 
         if (course.isPresent()) {
@@ -59,12 +60,13 @@ public class CourseService {
                 course.get().setAvailablePositions(courseDTO.getAvailablePositions());
             }
 
-            this.courseRepository.save(course.get());
+            return this.courseRepository.save(course.get());
+        } else {
+            throw new CourseNotFoundException(courseId);
         }
-
-        return course;
     }
 
+    //TODO: Add validation here, check if the course belongs to the teacher
     public void deleteCourse(Long courseId) {
         Optional<Course> course = this.courseRepository.findById(courseId);
         if (course.isPresent()) {

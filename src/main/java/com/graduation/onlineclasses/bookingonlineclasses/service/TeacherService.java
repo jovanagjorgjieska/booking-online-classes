@@ -20,13 +20,15 @@ public class TeacherService implements UserService<Teacher> {
     private final TeacherRepository teacherRepository;
 
     @Override
-    public Optional<Teacher> getUserById(Long id) {
-        return this.teacherRepository.findById(id);
+    public Teacher getUserById(Long id) {
+        return this.teacherRepository.findById(id)
+                .orElseThrow(() -> new TeacherNotFoundException(id));
     }
 
     @Override
-    public Optional<Teacher> getUserByEmail(String email) {
-        return this.teacherRepository.findByEmail(email);
+    public Teacher getUserByEmail(String email) {
+        return this.teacherRepository.findByEmail(email)
+                .orElseThrow(() -> new TeacherNotFoundException(email));
     }
 
     @Override
@@ -44,18 +46,14 @@ public class TeacherService implements UserService<Teacher> {
         Optional<Teacher> teacher = this.teacherRepository.findById(userId);
 
         if(teacher.isPresent()) {
-            if(user.getEmail() != null) {
+            if(user.getEmail() != null)
                 teacher.get().setEmail(user.getEmail());
-            }
-            if(user.getPassword() != null) {
+            if(user.getPassword() != null)
                 teacher.get().setPassword(user.getPassword());
-            }
-            if(user.getEducation() != null) {
+            if(user.getEducation() != null)
                 teacher.get().setEducation(user.getEducation());
-            }
-            if(user.getOccupation() != null) {
+            if(user.getOccupation() != null)
                 teacher.get().setOccupation(user.getOccupation());
-            }
 
             return this.teacherRepository.save(teacher.get());
         } else {

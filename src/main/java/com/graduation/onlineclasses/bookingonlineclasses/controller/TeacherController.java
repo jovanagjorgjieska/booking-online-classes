@@ -4,8 +4,6 @@ import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.CourseDT
 import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.TeacherDTO;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Course;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Teacher;
-import com.graduation.onlineclasses.bookingonlineclasses.exception.CourseNotFoundException;
-import com.graduation.onlineclasses.bookingonlineclasses.exception.TeacherNotFoundException;
 import com.graduation.onlineclasses.bookingonlineclasses.mapper.TeacherMapper;
 import com.graduation.onlineclasses.bookingonlineclasses.service.CourseService;
 import com.graduation.onlineclasses.bookingonlineclasses.service.TeacherService;
@@ -33,18 +31,17 @@ public class TeacherController {
     }
 
     @GetMapping("/{teacherId}")
-    public ResponseEntity<?> fetchTeacher(@PathVariable Long teacherId) {
-        try {
-            Teacher fetchedTeacher = this.teacherService.getUserById(teacherId)
-                    .orElseThrow(() -> new TeacherNotFoundException(teacherId));
-            return ResponseEntity.ok(fetchedTeacher);
-        } catch (TeacherNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<Teacher> fetchTeacher(@PathVariable Long teacherId) {
+        return ResponseEntity.ok(this.teacherService.getUserById(teacherId));
+    }
+
+    @GetMapping("/email/{teacherEmail}")
+    public ResponseEntity<Teacher> fetchTeacherById(@PathVariable String teacherEmail) {
+        return ResponseEntity.ok(this.teacherService.getUserByEmail(teacherEmail));
     }
 
     @PutMapping("/{teacherId}")
-    public ResponseEntity<?> editTeacher(@PathVariable Long teacherId, @RequestBody TeacherDTO teacherDTO) {
+    public ResponseEntity<Teacher> editTeacher(@PathVariable Long teacherId, @RequestBody TeacherDTO teacherDTO) {
         Teacher teacher = this.teacherService.updateUser(teacherId, teacherMapper.mapFromTeacherDtoToTeacher(teacherDTO));
 
         URI location = ServletUriComponentsBuilder
@@ -68,7 +65,7 @@ public class TeacherController {
     }
 
     @GetMapping("/{teacherId}/courses/{courseId}")
-    public ResponseEntity<?> getCourse(@PathVariable Long teacherId, @PathVariable Long courseId) {
+    public ResponseEntity<Course> getCourse(@PathVariable Long teacherId, @PathVariable Long courseId) {
         return ResponseEntity.ok(this.teacherService.getTeachersCourse(teacherId, courseId));
     }
 
@@ -80,20 +77,15 @@ public class TeacherController {
     }
 
     @PutMapping("/{teacherId}/courses/{courseId}")
-    public ResponseEntity<?> editTeachersCourse (@PathVariable Long teacherId, @PathVariable Long courseId, @RequestBody CourseDTO courseDTO) {
-        try {
-            Course course = this.courseService.editCourse(courseId, courseDTO)
-                    .orElseThrow(() -> new CourseNotFoundException(courseId));
+    public ResponseEntity<Course> editTeachersCourse (@PathVariable Long teacherId, @PathVariable Long courseId, @RequestBody CourseDTO courseDTO) {
+        Course course = this.courseService.editCourse(teacherId, courseId, courseDTO);
 
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(course.getCourseId())
-                    .toUri();
-            return ResponseEntity.created(location).body(course);
-        } catch (CourseNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(course.getCourseId())
+                .toUri();
+        return ResponseEntity.created(location).body(course);
     }
 
 
