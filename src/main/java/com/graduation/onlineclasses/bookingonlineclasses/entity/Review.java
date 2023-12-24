@@ -1,19 +1,23 @@
 package com.graduation.onlineclasses.bookingonlineclasses.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
+@Data
 public class Review {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long reviewId;
 
-    private Long studentId;
+    @ManyToOne
+    @JoinColumn(name = "studentId", nullable = false)
+    private Student student;
 
-    private Long teacherId;
-
-    private Long courseId;
+    @ManyToOne
+    @JoinColumn(name = "courseId", nullable = false)
+    private Course course;
 
     private Integer score;
 

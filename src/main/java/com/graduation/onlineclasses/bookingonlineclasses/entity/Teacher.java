@@ -27,7 +27,4 @@ public class Teacher extends BaseUser {
     @JsonIgnore
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
     private List<Booking> bookings;
-
-    @OneToMany
-    private List<Review> reviews;
 }

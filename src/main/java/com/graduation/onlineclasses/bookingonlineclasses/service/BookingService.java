@@ -1,7 +1,6 @@
 package com.graduation.onlineclasses.bookingonlineclasses.service;
 
 import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.BookingDTO;
-import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.CourseDTO;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Booking;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Course;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Student;
@@ -75,7 +74,7 @@ public class BookingService {
         if (booking.isPresent()) {
             this.courseService.changeCourseAvailableAndBookedPositions(booking.get().getCourse().getCourseId(),
                     booking.get().getCourse().getAvailablePositions() + 1,
-                    booking.get().getCourse().getBookedPositions() -1);
+                    booking.get().getCourse().getBookedPositions() - 1);
             this.bookingRepository.delete(booking.get());
         } else {
             throw new BookingNotFoundException(bookingId);

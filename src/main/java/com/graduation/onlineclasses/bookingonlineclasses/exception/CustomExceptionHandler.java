@@ -36,4 +36,11 @@ public class CustomExceptionHandler {
     String bookingNotFoundException(BookingNotFoundException e) {
         return e.getMessage();
     }
+
+    @ResponseBody
+    @ExceptionHandler(ReviewNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    String reviewNotFoundException(ReviewNotFoundException e) {
+        return e.getMessage();
+    }
 }
