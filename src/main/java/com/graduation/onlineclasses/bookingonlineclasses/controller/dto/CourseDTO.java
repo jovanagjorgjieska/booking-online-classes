@@ -10,5 +10,8 @@ public class CourseDTO {
     private String courseName;
     private String description;
     private Integer availablePositions;
+    private String courseType;
+    private String courseCategory;
     private Double price;
+
 }

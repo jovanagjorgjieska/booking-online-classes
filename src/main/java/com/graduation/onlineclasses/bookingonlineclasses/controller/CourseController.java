@@ -1,15 +1,11 @@
 package com.graduation.onlineclasses.bookingonlineclasses.controller;
 
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Course;
-import com.graduation.onlineclasses.bookingonlineclasses.exception.CourseNotFoundException;
 import com.graduation.onlineclasses.bookingonlineclasses.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,8 +21,26 @@ public class CourseController {
         return ResponseEntity.ok(this.courseService.getAllCourses());
     }
 
+    @GetMapping("/title")
+    public ResponseEntity<List<Course>> getAllCoursesByName(@RequestParam String courseName) {
+        return ResponseEntity.ok(this.courseService.getAllCoursesByName(courseName));
+    }
+
     @GetMapping("/{courseId}")
     public ResponseEntity<Course> getCourse(@PathVariable Long courseId) {
         return ResponseEntity.ok(this.courseService.getCourse(courseId));
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<Course>> filterCourses(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String type) {
+        try {
+            List<Course> filteredCourses = this.courseService.filterByCategoryAndType(category, type);
+            return ResponseEntity.ok(filteredCourses);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(List.of());
+        }
     }
 }

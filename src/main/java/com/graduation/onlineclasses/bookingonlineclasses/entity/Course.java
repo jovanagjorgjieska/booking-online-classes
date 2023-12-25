@@ -1,6 +1,8 @@
 package com.graduation.onlineclasses.bookingonlineclasses.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.CourseCategory;
+import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.CourseType;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -25,6 +27,12 @@ public class Course {
     private Integer bookedPositions;
 
     private Integer availablePositions;
+
+    @Enumerated(EnumType.STRING)
+    private CourseType courseType;
+
+    @Enumerated(EnumType.STRING)
+    private CourseCategory courseCategory;
 
     private Double price;
 
