@@ -1,12 +1,14 @@
 package com.graduation.onlineclasses.bookingonlineclasses.service;
 
+import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.RegisterRequest;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.BaseUser;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Course;
-import com.graduation.onlineclasses.bookingonlineclasses.entity.Teacher;
+import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.UserRole;
 import com.graduation.onlineclasses.bookingonlineclasses.exception.CourseNotFoundException;
 import com.graduation.onlineclasses.bookingonlineclasses.exception.TeacherNotFoundException;
-import com.graduation.onlineclasses.bookingonlineclasses.repository.TeacherRepository;
+import com.graduation.onlineclasses.bookingonlineclasses.repository.BaseUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,47 +17,48 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class TeacherService implements UserService<Teacher> {
+public class TeacherService implements UserService {
 
-    private final TeacherRepository teacherRepository;
+    private final BaseUserRepository baseUserRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
-    public Teacher getUserById(Long id) {
-        return this.teacherRepository.findById(id)
+    public BaseUser getUserById(Long id) {
+        return this.baseUserRepository.findById(id)
                 .orElseThrow(() -> new TeacherNotFoundException(id));
     }
 
     @Override
-    public Teacher getUserByEmail(String email) {
-        return this.teacherRepository.findByEmail(email)
+    public BaseUser getUserByEmail(String email) {
+        return this.baseUserRepository.findByEmail(email)
                 .orElseThrow(() -> new TeacherNotFoundException(email));
     }
 
     @Override
-    public Teacher createUser(BaseUser user) {
-        Teacher newTeacher = new Teacher();
+    public BaseUser createUser(RegisterRequest user) {
+        BaseUser newTeacher = new BaseUser();
         newTeacher.setEmail(user.getEmail());
-        newTeacher.setPassword(user.getPassword());
-        newTeacher.setUserRole(user.getUserRole());
+        newTeacher.setPassword(passwordEncoder.encode(user.getPassword()));
+        newTeacher.setUserRole(UserRole.valueOf(user.getRole()));
 
-        return this.teacherRepository.save(newTeacher);
+        return this.baseUserRepository.save(newTeacher);
     }
 
     @Override
-    public Teacher updateUser(Long userId, Teacher user) {
-        Optional<Teacher> teacher = this.teacherRepository.findById(userId);
+    public BaseUser updateUser(Long userId, BaseUser user) {
+        Optional<BaseUser> teacher = this.baseUserRepository.findById(userId);
 
         if(teacher.isPresent()) {
             if(user.getEmail() != null)
                 teacher.get().setEmail(user.getEmail());
             if(user.getPassword() != null)
-                teacher.get().setPassword(user.getPassword());
+                teacher.get().setPassword(passwordEncoder.encode(user.getPassword()));
             if(user.getEducation() != null)
                 teacher.get().setEducation(user.getEducation());
             if(user.getOccupation() != null)
                 teacher.get().setOccupation(user.getOccupation());
 
-            return this.teacherRepository.save(teacher.get());
+            return this.baseUserRepository.save(teacher.get());
         } else {
             throw new TeacherNotFoundException(userId);
         }
@@ -63,20 +66,20 @@ public class TeacherService implements UserService<Teacher> {
 
     @Override
     public void deleteUser(Long userId) {
-        Optional<Teacher> teacherToRemove = this.teacherRepository.findById(userId);
+        Optional<BaseUser> teacherToRemove = this.baseUserRepository.findById(userId);
         if(teacherToRemove.isPresent()) {
-            this.teacherRepository.delete(teacherToRemove.get());
+            this.baseUserRepository.delete(teacherToRemove.get());
         } else {
             throw new TeacherNotFoundException(userId);
         }
     }
 
-    public List<Teacher> getAllTeachers() {
-        return this.teacherRepository.findAll();
+    public List<BaseUser> getAllTeachers(String userRole) {
+        return this.baseUserRepository.findAllByUserRole(UserRole.valueOf(userRole));
     }
 
     public List<Course> getAllCoursesForTeacher(Long teacherId) {
-        Optional<Teacher> teacher = this.teacherRepository.findById(teacherId);
+        Optional<BaseUser> teacher = this.baseUserRepository.findById(teacherId);
         if(teacher.isPresent()) {
             return teacher.get().getCourses();
         } else {
@@ -85,7 +88,7 @@ public class TeacherService implements UserService<Teacher> {
     }
 
     public Course getTeachersCourse(Long teacherId, Long courseId) {
-        Optional<Teacher> teacher = this.teacherRepository.findById(teacherId);
+        Optional<BaseUser> teacher = this.baseUserRepository.findById(teacherId);
 
         if(teacher.isPresent()) {
             List<Course> courses = teacher.get().getCourses();

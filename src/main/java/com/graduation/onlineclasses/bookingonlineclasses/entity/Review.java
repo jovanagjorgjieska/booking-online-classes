@@ -13,7 +13,7 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "studentId", nullable = false)
-    private Student student;
+    private BaseUser student;
 
     @ManyToOne
     @JoinColumn(name = "courseId", nullable = false)

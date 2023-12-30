@@ -1,12 +1,12 @@
 package com.graduation.onlineclasses.bookingonlineclasses.service;
 
+import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.RegisterRequest;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.BaseUser;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Course;
-import com.graduation.onlineclasses.bookingonlineclasses.entity.Teacher;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.UserRole;
 import com.graduation.onlineclasses.bookingonlineclasses.exception.CourseNotFoundException;
 import com.graduation.onlineclasses.bookingonlineclasses.exception.TeacherNotFoundException;
-import com.graduation.onlineclasses.bookingonlineclasses.repository.TeacherRepository;
+import com.graduation.onlineclasses.bookingonlineclasses.repository.BaseUserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,29 +27,29 @@ public class TeacherServiceTest {
     TeacherService classUnderTest;
 
     @Mock
-    private TeacherRepository teacherRepository;
+    private BaseUserRepository baseUserRepository;
 
     private final Long TEST_ID = 101L;
     private final String TEST_EMAIL = "mock@mail.com";
 
     @Test
     public void getUserByIdTest() {
-        Teacher mockTeacher = createMockTeacher();
+        BaseUser mockTeacher = createMockTeacher();
 
-        when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(mockTeacher));
+        when(baseUserRepository.findById(anyLong())).thenReturn(Optional.of(mockTeacher));
 
-        Teacher result = classUnderTest.getUserById(TEST_ID);
+        BaseUser result = classUnderTest.getUserById(TEST_ID);
 
         assertAll(
                 () -> assertNotNull(result),
-                () -> assertEquals(TEST_ID, result.getTeacherId())
+                () -> assertEquals(TEST_ID, result.getUserId())
         );
     }
 
     @Test
     public void getUserByIdTest_TeacherDoesNotExist() {
 
-        when(teacherRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(baseUserRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(TeacherNotFoundException.class,
                 () -> classUnderTest.getUserById(TEST_ID));
@@ -57,12 +57,12 @@ public class TeacherServiceTest {
 
     @Test
     public void getUserByEmailTest() {
-        Teacher mockTeacher = createMockTeacher();
+        BaseUser mockTeacher = createMockTeacher();
         mockTeacher.setEmail(TEST_EMAIL);
 
-        when(teacherRepository.findByEmail(anyString())).thenReturn(Optional.of(mockTeacher));
+        when(baseUserRepository.findByEmail(anyString())).thenReturn(Optional.of(mockTeacher));
 
-        Teacher result = classUnderTest.getUserByEmail(TEST_EMAIL);
+        BaseUser result = classUnderTest.getUserByEmail(TEST_EMAIL);
 
         assertAll(
                 () -> assertNotNull(result),
@@ -72,7 +72,7 @@ public class TeacherServiceTest {
 
     @Test
     public void getUserByEmail_TeacherDoesNotExist() {
-        when(teacherRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(baseUserRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
         assertThrows(TeacherNotFoundException.class,
                 () -> classUnderTest.getUserByEmail(TEST_EMAIL));
@@ -81,41 +81,41 @@ public class TeacherServiceTest {
     @Test
     public void createUserTest() {
 
-        BaseUser mockUser = new BaseUser();
+        RegisterRequest mockUser = new RegisterRequest();
         mockUser.setEmail(TEST_EMAIL);
         mockUser.setPassword("testpass");
-        mockUser.setUserRole(UserRole.TEACHER);
+        mockUser.setRole("TEACHER");
 
-        Teacher teacher = createMockTeacher();
+        BaseUser teacher = createMockTeacher();
         teacher.setEmail(TEST_EMAIL);
         teacher.setPassword("testpass");
         teacher.setUserRole(UserRole.TEACHER);
 
-        when(teacherRepository.save(any(Teacher.class))).thenReturn(teacher);
+        when(baseUserRepository.save(any(BaseUser.class))).thenReturn(teacher);
 
-        Teacher result = classUnderTest.createUser(mockUser);
+        BaseUser result = classUnderTest.createUser(mockUser);
 
-        verify(teacherRepository, times(1)).save(any(Teacher.class));
+        verify(baseUserRepository, times(1)).save(any(BaseUser.class));
         assertAll(
                 () -> assertNotNull(result),
                 () -> assertEquals(TEST_EMAIL, result.getEmail()),
                 () -> assertEquals(mockUser.getPassword(), result.getPassword()),
-                () -> assertEquals(mockUser.getUserRole(), result.getUserRole())
+                () -> assertEquals(mockUser.getRole(), result.getUserRole().toString())
         );
     }
 
     @Test
     public void updateUser() {
-        Teacher teacher = createMockTeacher();
+        BaseUser teacher = createMockTeacher();
         teacher.setEmail("test@mail.com");
         teacher.setPassword("testpass");
         teacher.setEducation("High School");
         teacher.setOccupation("Student");
 
-        when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
-        when(teacherRepository.save(any(Teacher.class))).thenReturn(teacher);
+        when(baseUserRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+        when(baseUserRepository.save(any(BaseUser.class))).thenReturn(teacher);
 
-        Teacher result = classUnderTest.updateUser(TEST_ID, teacher);
+        BaseUser result = classUnderTest.updateUser(TEST_ID, teacher);
 
         assertAll(
                 () -> assertNotNull(result),
@@ -128,7 +128,7 @@ public class TeacherServiceTest {
 
     @Test
     public void updateUser_TeacherDoesNotExist() {
-        when(teacherRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(baseUserRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(TeacherNotFoundException.class,
                 () -> classUnderTest.updateUser(TEST_ID, createMockTeacher()));
@@ -136,19 +136,19 @@ public class TeacherServiceTest {
 
     @Test
     public void deleteUserTest() {
-        Teacher teacher = createMockTeacher();
+        BaseUser teacher = createMockTeacher();
 
-        when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
-        doNothing().when(teacherRepository).delete(any(Teacher.class));
+        when(baseUserRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+        doNothing().when(baseUserRepository).delete(any(BaseUser.class));
 
         classUnderTest.deleteUser(TEST_ID);
 
-        verify(teacherRepository, times(1)).delete(any(Teacher.class));
+        verify(baseUserRepository, times(1)).delete(any(BaseUser.class));
     }
 
     @Test
     public void deleteUserTest_TeacherDoesNotExist() {
-        when(teacherRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(baseUserRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(TeacherNotFoundException.class,
                 () -> classUnderTest.deleteUser(TEST_ID));
@@ -156,13 +156,13 @@ public class TeacherServiceTest {
 
     @Test
     public void getAllTeachersTest() {
-        Teacher teacher1 = createMockTeacher();
-        Teacher teacher2 = createMockTeacher();
-        List<Teacher> teacherList = List.of(teacher1, teacher2);
+        BaseUser teacher1 = createMockTeacher();
+        BaseUser teacher2 = createMockTeacher();
+        List<BaseUser> teacherList = List.of(teacher1, teacher2);
 
-        when(teacherRepository.findAll()).thenReturn(teacherList);
+        when(baseUserRepository.findAllByUserRole(any(UserRole.class))).thenReturn(teacherList);
 
-        List<Teacher> result = classUnderTest.getAllTeachers();
+        List<BaseUser> result = classUnderTest.getAllTeachers("TEACHER");
 
         assertAll(
                 () -> assertNotNull(result),
@@ -175,10 +175,10 @@ public class TeacherServiceTest {
         Course course1 = createMockCourse();
         Course course2 = createMockCourse();
 
-        Teacher teacher = createMockTeacher();
+        BaseUser teacher = createMockTeacher();
         teacher.setCourses(List.of(course1, course2));
 
-        when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+        when(baseUserRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
 
         List<Course> result = classUnderTest.getAllCoursesForTeacher(TEST_ID);
 
@@ -187,7 +187,7 @@ public class TeacherServiceTest {
 
     @Test
     public void getAllCoursesForTeacherTest_teacherDoesNotExist() {
-        when(teacherRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(baseUserRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(TeacherNotFoundException.class,
                 () -> classUnderTest.getAllCoursesForTeacher(TEST_ID));
@@ -195,14 +195,14 @@ public class TeacherServiceTest {
 
     @Test
     public void getTeachersCourseTest() {
-        Teacher teacher = createMockTeacher();
+        BaseUser teacher = createMockTeacher();
         Course course1 = createMockCourse();
         Course course2 = createMockCourse();
         course2.setCourseId(102L);
 
         teacher.setCourses(List.of(course1, course2));
 
-        when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+        when(baseUserRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
 
         Course result = classUnderTest.getTeachersCourse(TEST_ID, TEST_ID);
 
@@ -214,7 +214,7 @@ public class TeacherServiceTest {
 
     @Test
     public void getTeachersCourseTest_teacherDoesNotExist() {
-        when(teacherRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(baseUserRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(TeacherNotFoundException.class,
                 () -> classUnderTest.getTeachersCourse(TEST_ID, TEST_ID));
@@ -222,19 +222,19 @@ public class TeacherServiceTest {
 
     @Test
     public void getTeachersCourseTest_courseDoesNotExist() {
-        Teacher teacher = createMockTeacher();
+        BaseUser teacher = createMockTeacher();
         Course course = createMockCourse();
         teacher.setCourses(List.of(course));
 
-        when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+        when(baseUserRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
 
         assertThrows(CourseNotFoundException.class,
                 () -> classUnderTest.getTeachersCourse(TEST_ID, 102L));
     }
 
-    private Teacher createMockTeacher() {
-        Teacher teacher = new Teacher();
-        teacher.setTeacherId(TEST_ID);
+    private BaseUser createMockTeacher() {
+        BaseUser teacher = new BaseUser();
+        teacher.setUserId(TEST_ID);
 
         return teacher;
     }

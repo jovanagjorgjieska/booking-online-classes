@@ -1,8 +1,8 @@
 package com.graduation.onlineclasses.bookingonlineclasses.service;
 
 import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.CourseDTO;
+import com.graduation.onlineclasses.bookingonlineclasses.entity.BaseUser;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Course;
-import com.graduation.onlineclasses.bookingonlineclasses.entity.Teacher;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.CourseCategory;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.CourseType;
 import com.graduation.onlineclasses.bookingonlineclasses.exception.CourseNotFoundException;
@@ -35,7 +35,7 @@ public class CourseService {
 
     public Course addCourse(Long teacherId, CourseDTO courseDTO) {
         Course course = new Course();
-        Teacher teacher = this.teacherService.getUserById(teacherId);
+        BaseUser teacher = this.teacherService.getUserById(teacherId);
 
         course.setTeacher(teacher);
         course.setCourseName(courseDTO.getCourseName());

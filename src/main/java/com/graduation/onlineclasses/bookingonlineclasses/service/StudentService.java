@@ -1,54 +1,57 @@
 package com.graduation.onlineclasses.bookingonlineclasses.service;
 
+import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.RegisterRequest;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.BaseUser;
-import com.graduation.onlineclasses.bookingonlineclasses.entity.Student;
+import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.UserRole;
 import com.graduation.onlineclasses.bookingonlineclasses.exception.StudentNotFoundException;
-import com.graduation.onlineclasses.bookingonlineclasses.repository.StudentRepository;
+import com.graduation.onlineclasses.bookingonlineclasses.repository.BaseUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class StudentService implements UserService<Student> {
+public class StudentService implements UserService {
 
-    private final StudentRepository studentRepository;
+    private final BaseUserRepository baseUserRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Override
-    public Student getUserById(Long id) {
-        return this.studentRepository.findById(id)
+    public BaseUser getUserById(Long id) {
+        return this.baseUserRepository.findById(id)
                 .orElseThrow(() -> new StudentNotFoundException(id));
     }
 
     @Override
-    public Student getUserByEmail(String email) {
-        return this.studentRepository.findByEmail(email)
+    public BaseUser getUserByEmail(String email) {
+        return this.baseUserRepository.findByEmail(email)
                 .orElseThrow(() -> new StudentNotFoundException(email));
     }
 
     @Override
-    public Student createUser(BaseUser user) {
-        Student newStudent = new Student();
+    public BaseUser createUser(RegisterRequest user) {
+        BaseUser newStudent = new BaseUser();
         newStudent.setEmail(user.getEmail());
-        newStudent.setPassword(user.getPassword());
-        newStudent.setUserRole(user.getUserRole());
+        newStudent.setPassword(passwordEncoder.encode(user.getPassword()));
+        newStudent.setUserRole(UserRole.valueOf(user.getRole()));
 
-        return this.studentRepository.save(newStudent);
+        return this.baseUserRepository.save(newStudent);
     }
 
     @Override
-    public Student updateUser(Long userId, Student user) {
-        Optional<Student> student = studentRepository.findById(userId);
+    public BaseUser updateUser(Long userId, BaseUser user) {
+        Optional<BaseUser> student = this.baseUserRepository.findById(userId);
 
         if(student.isPresent()) {
             if(user.getEmail() != null)
                 student.get().setEmail(user.getEmail());
             if(user.getPassword() != null)
-                student.get().setPassword(user.getPassword());
+                student.get().setPassword(passwordEncoder.encode(user.getPassword()));
 
-            return studentRepository.save(student.get());
+            return baseUserRepository.save(student.get());
         } else {
             throw new StudentNotFoundException(userId);
         }
@@ -56,9 +59,9 @@ public class StudentService implements UserService<Student> {
 
     @Override
     public void deleteUser(Long userId) {
-        Optional<Student> studentToRemove = this.studentRepository.findById(userId);
+        Optional<BaseUser> studentToRemove = this.baseUserRepository.findById(userId);
         if(studentToRemove.isPresent()) {
-            this.studentRepository.delete(studentToRemove.get());
+            this.baseUserRepository.delete(studentToRemove.get());
         } else {
             throw new StudentNotFoundException(userId);
         }

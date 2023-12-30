@@ -1,10 +1,9 @@
 package com.graduation.onlineclasses.bookingonlineclasses.service;
 
 import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.BookingDTO;
+import com.graduation.onlineclasses.bookingonlineclasses.entity.BaseUser;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Booking;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Course;
-import com.graduation.onlineclasses.bookingonlineclasses.entity.Student;
-import com.graduation.onlineclasses.bookingonlineclasses.entity.Teacher;
 import com.graduation.onlineclasses.bookingonlineclasses.exception.BookingNotFoundException;
 import com.graduation.onlineclasses.bookingonlineclasses.repository.BookingRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,13 +35,13 @@ public class BookingService {
     }
 
     public List<Booking> getAllBookingsByTeacher (Long teacherId) {
-        Teacher teacher = this.teacherService.getUserById(teacherId);
+        BaseUser teacher = this.teacherService.getUserById(teacherId);
 
         return this.bookingRepository.findAllByTeacher(teacher);
     }
 
     public List<Booking> getAllBookingsByStudent (Long studentId) {
-        Student student = this.studentService.getUserById(studentId);
+        BaseUser student = this.studentService.getUserById(studentId);
 
         return this.bookingRepository.findAllByStudent(student);
     }
@@ -51,8 +50,8 @@ public class BookingService {
     @Transactional
     public Booking bookCourse (BookingDTO bookingDTO) {
         Course course = this.courseService.getCourse(bookingDTO.getCourseId());
-        Teacher teacher = this.teacherService.getUserById(bookingDTO.getTeacherId());
-        Student student = this.studentService.getUserById(bookingDTO.getStudentId());
+        BaseUser teacher = this.teacherService.getUserById(bookingDTO.getTeacherId());
+        BaseUser student = this.studentService.getUserById(bookingDTO.getStudentId());
 
         Booking booking = new Booking();
         booking.setCourse(course);

@@ -1,15 +1,16 @@
 package com.graduation.onlineclasses.bookingonlineclasses.service;
 
+import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.RegisterRequest;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.BaseUser;
 
-public interface UserService<T extends BaseUser> {
+public interface UserService {
 
-    T getUserById(Long id);
-    T getUserByEmail (String email);
+    BaseUser getUserById(Long id);
+    BaseUser getUserByEmail (String email);
 
-    T createUser (BaseUser user);
+    BaseUser createUser (RegisterRequest user);
 
-    T updateUser (Long userId, T user);
+    BaseUser updateUser (Long userId, BaseUser user);
 
     void deleteUser(Long userId);
 }

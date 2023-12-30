@@ -19,11 +19,11 @@ public class Booking {
 
     @ManyToOne
     @JoinColumn(name = "studentId", nullable = false)
-    private Student student;
+    private BaseUser student;
 
     @ManyToOne
     @JoinColumn(name = "teacherId", nullable = false)
-    private Teacher teacher;
+    private BaseUser teacher;
 
     private LocalDateTime bookingDate;
 }

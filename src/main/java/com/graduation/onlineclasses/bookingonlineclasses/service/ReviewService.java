@@ -1,9 +1,9 @@
 package com.graduation.onlineclasses.bookingonlineclasses.service;
 
 import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.ReviewDTO;
+import com.graduation.onlineclasses.bookingonlineclasses.entity.BaseUser;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Course;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Review;
-import com.graduation.onlineclasses.bookingonlineclasses.entity.Student;
 import com.graduation.onlineclasses.bookingonlineclasses.exception.ReviewNotFoundException;
 import com.graduation.onlineclasses.bookingonlineclasses.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class ReviewService {
     }
 
     public List<Review> getAllReviewsByStudent (Long studentId) {
-        Student student = this.studentService.getUserById(studentId);
+        BaseUser student = this.studentService.getUserById(studentId);
 
         return this.reviewRepository.findAllByStudent(student);
     }
@@ -41,7 +41,7 @@ public class ReviewService {
     //TODO: Add validation if the student participated the course
     public Review createReview (ReviewDTO reviewDTO) {
         Course course = this.courseService.getCourse(reviewDTO.getCourseId());
-        Student student = this.studentService.getUserById(reviewDTO.getStudentId());
+        BaseUser student = this.studentService.getUserById(reviewDTO.getStudentId());
 
         Review review = new Review();
         review.setCourse(course);

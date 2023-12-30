@@ -2,9 +2,9 @@ package com.graduation.onlineclasses.bookingonlineclasses.controller;
 
 import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.CourseDTO;
 import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.TeacherDTO;
+import com.graduation.onlineclasses.bookingonlineclasses.entity.BaseUser;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Course;
-import com.graduation.onlineclasses.bookingonlineclasses.entity.Teacher;
-import com.graduation.onlineclasses.bookingonlineclasses.mapper.TeacherMapper;
+import com.graduation.onlineclasses.bookingonlineclasses.mapper.UserMapper;
 import com.graduation.onlineclasses.bookingonlineclasses.service.CourseService;
 import com.graduation.onlineclasses.bookingonlineclasses.service.TeacherService;
 import lombok.RequiredArgsConstructor;
@@ -22,32 +22,33 @@ import java.util.List;
 public class TeacherController {
 
     private final TeacherService teacherService;
-    private final TeacherMapper teacherMapper;
+    private final UserMapper userMapper;
     private final CourseService courseService;
 
     @GetMapping
-    public ResponseEntity<List<Teacher>> getAllTeachers() {
-        return ResponseEntity.ok(this.teacherService.getAllTeachers());
+    public ResponseEntity<List<BaseUser>> getAllTeachers() {
+        return ResponseEntity.ok(this.teacherService.getAllTeachers("TEACHER"));
     }
 
     @GetMapping("/{teacherId}")
-    public ResponseEntity<Teacher> fetchTeacher(@PathVariable Long teacherId) {
+    public ResponseEntity<BaseUser> fetchTeacher(@PathVariable Long teacherId) {
         return ResponseEntity.ok(this.teacherService.getUserById(teacherId));
     }
 
     @GetMapping("/email/{teacherEmail}")
-    public ResponseEntity<Teacher> fetchTeacherById(@PathVariable String teacherEmail) {
+    public ResponseEntity<BaseUser> fetchTeacherById(@PathVariable String teacherEmail) {
         return ResponseEntity.ok(this.teacherService.getUserByEmail(teacherEmail));
     }
 
     @PutMapping("/{teacherId}")
-    public ResponseEntity<Teacher> editTeacher(@PathVariable Long teacherId, @RequestBody TeacherDTO teacherDTO) {
-        Teacher teacher = this.teacherService.updateUser(teacherId, teacherMapper.mapFromTeacherDtoToTeacher(teacherDTO));
+    public ResponseEntity<BaseUser> editTeacher(@PathVariable Long teacherId, @RequestBody TeacherDTO teacherDTO) {
+        BaseUser teacher = this.teacherService.updateUser(teacherId, userMapper
+                .mapFromTeacherDtoToUser(teacherDTO));
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(teacher.getTeacherId())
+                .buildAndExpand(teacher.getUserId())
                 .toUri();
         return ResponseEntity.created(location).body(teacher);
     }
