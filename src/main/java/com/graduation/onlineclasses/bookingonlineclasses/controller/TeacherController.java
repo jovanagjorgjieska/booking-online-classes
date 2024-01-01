@@ -36,7 +36,7 @@ public class TeacherController {
     }
 
     @GetMapping("/email/{teacherEmail}")
-    public ResponseEntity<BaseUser> fetchTeacherById(@PathVariable String teacherEmail) {
+    public ResponseEntity<BaseUser> fetchTeacherByEmail(@PathVariable String teacherEmail) {
         return ResponseEntity.ok(this.teacherService.getUserByEmail(teacherEmail));
     }
 
