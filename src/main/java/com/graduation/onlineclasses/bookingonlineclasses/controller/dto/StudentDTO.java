@@ -9,4 +9,6 @@ public class StudentDTO {
 
     public String email;
     public String password;
+    public String firstName;
+    public String lastName;
 }

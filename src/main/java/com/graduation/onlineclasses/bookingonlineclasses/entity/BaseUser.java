@@ -20,6 +20,10 @@ public class BaseUser {
     @JsonIgnore
     private String password;
 
+    private String firstName;
+
+    private String lastName;
+
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 

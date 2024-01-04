@@ -36,6 +36,8 @@ public class StudentService implements UserService {
         BaseUser newStudent = new BaseUser();
         newStudent.setEmail(user.getEmail());
         newStudent.setPassword(passwordEncoder.encode(user.getPassword()));
+        newStudent.setFirstName(user.getFirstName());
+        newStudent.setLastName(user.getLastName());
         newStudent.setUserRole(UserRole.valueOf(user.getRole()));
 
         return this.baseUserRepository.save(newStudent);
@@ -50,6 +52,10 @@ public class StudentService implements UserService {
                 student.get().setEmail(user.getEmail());
             if(user.getPassword() != null)
                 student.get().setPassword(passwordEncoder.encode(user.getPassword()));
+            if(user.getFirstName() != null)
+                student.get().setFirstName(user.getFirstName());
+            if(user.getLastName() != null)
+                student.get().setLastName(user.getLastName());
 
             return baseUserRepository.save(student.get());
         } else {

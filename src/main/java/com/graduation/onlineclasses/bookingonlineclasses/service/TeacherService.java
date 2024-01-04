@@ -39,6 +39,8 @@ public class TeacherService implements UserService {
         BaseUser newTeacher = new BaseUser();
         newTeacher.setEmail(user.getEmail());
         newTeacher.setPassword(passwordEncoder.encode(user.getPassword()));
+        newTeacher.setFirstName(user.getFirstName());
+        newTeacher.setLastName(user.getLastName());
         newTeacher.setUserRole(UserRole.valueOf(user.getRole()));
 
         return this.baseUserRepository.save(newTeacher);
@@ -53,6 +55,10 @@ public class TeacherService implements UserService {
                 teacher.get().setEmail(user.getEmail());
             if(user.getPassword() != null)
                 teacher.get().setPassword(passwordEncoder.encode(user.getPassword()));
+            if(user.getFirstName() != null)
+                teacher.get().setFirstName(user.getFirstName());
+            if(user.getLastName() != null)
+                teacher.get().setLastName(user.getLastName());
             if(user.getEducation() != null)
                 teacher.get().setEducation(user.getEducation());
             if(user.getOccupation() != null)

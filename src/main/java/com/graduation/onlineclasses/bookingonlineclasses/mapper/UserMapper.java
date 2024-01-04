@@ -12,6 +12,8 @@ public class UserMapper {
         BaseUser teacher = new BaseUser();
         teacher.setEmail(teacherDTO.getEmail());
         teacher.setPassword(teacherDTO.getPassword());
+        teacher.setFirstName(teacherDTO.getFirstName());
+        teacher.setLastName(teacherDTO.getLastName());
         teacher.setEducation(teacherDTO.getEducation());
         teacher.setOccupation(teacherDTO.getOccupation());
 
@@ -22,6 +24,8 @@ public class UserMapper {
         BaseUser student = new BaseUser();
         student.setEmail(studentDTO.getEmail());
         student.setPassword(studentDTO.getPassword());
+        student.setFirstName(studentDTO.getFirstName());
+        student.setLastName(studentDTO.getLastName());
 
         return student;
     }
