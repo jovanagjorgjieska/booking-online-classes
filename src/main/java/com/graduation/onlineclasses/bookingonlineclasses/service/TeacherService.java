@@ -42,6 +42,7 @@ public class TeacherService implements UserService {
         newTeacher.setFirstName(user.getFirstName());
         newTeacher.setLastName(user.getLastName());
         newTeacher.setUserRole(UserRole.valueOf(user.getRole()));
+        newTeacher.setPhoneNumber(user.getPhoneNumber());
 
         return this.baseUserRepository.save(newTeacher);
     }
@@ -63,6 +64,8 @@ public class TeacherService implements UserService {
                 teacher.get().setEducation(user.getEducation());
             if(user.getOccupation() != null)
                 teacher.get().setOccupation(user.getOccupation());
+            if(user.getPhoneNumber() != null)
+                teacher.get().setPhoneNumber(user.getPhoneNumber());
 
             return this.baseUserRepository.save(teacher.get());
         } else {

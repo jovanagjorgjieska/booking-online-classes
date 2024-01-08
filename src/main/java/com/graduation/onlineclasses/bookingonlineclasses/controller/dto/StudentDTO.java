@@ -11,4 +11,5 @@ public class StudentDTO {
     public String password;
     public String firstName;
     public String lastName;
+    public Integer phoneNumber;
 }

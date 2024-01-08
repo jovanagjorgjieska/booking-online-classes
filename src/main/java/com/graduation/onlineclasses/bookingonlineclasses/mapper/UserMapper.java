@@ -16,6 +16,7 @@ public class UserMapper {
         teacher.setLastName(teacherDTO.getLastName());
         teacher.setEducation(teacherDTO.getEducation());
         teacher.setOccupation(teacherDTO.getOccupation());
+        teacher.setPhoneNumber(teacherDTO.getPhoneNumber());
 
         return teacher;
     }
@@ -26,6 +27,7 @@ public class UserMapper {
         student.setPassword(studentDTO.getPassword());
         student.setFirstName(studentDTO.getFirstName());
         student.setLastName(studentDTO.getLastName());
+        student.setPhoneNumber(studentDTO.getPhoneNumber());
 
         return student;
     }

@@ -39,6 +39,7 @@ public class StudentService implements UserService {
         newStudent.setFirstName(user.getFirstName());
         newStudent.setLastName(user.getLastName());
         newStudent.setUserRole(UserRole.valueOf(user.getRole()));
+        newStudent.setPhoneNumber(user.getPhoneNumber());
 
         return this.baseUserRepository.save(newStudent);
     }
@@ -56,6 +57,8 @@ public class StudentService implements UserService {
                 student.get().setFirstName(user.getFirstName());
             if(user.getLastName() != null)
                 student.get().setLastName(user.getLastName());
+            if(user.getPhoneNumber() != null)
+                student.get().setPhoneNumber(user.getPhoneNumber());
 
             return baseUserRepository.save(student.get());
         } else {

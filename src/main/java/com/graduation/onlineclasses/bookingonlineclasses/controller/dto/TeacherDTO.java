@@ -13,4 +13,5 @@ public class TeacherDTO {
     public String lastName;
     private String education;
     private String occupation;
+    private Integer phoneNumber;
 }

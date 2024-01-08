@@ -27,6 +27,8 @@ public class BaseUser {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
+    private Integer phoneNumber;
+
     private String education;
 
     private String occupation;
