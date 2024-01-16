@@ -2,8 +2,9 @@ package com.graduation.onlineclasses.bookingonlineclasses.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -25,5 +26,6 @@ public class Booking {
     @JoinColumn(name = "teacherId", nullable = false)
     private BaseUser teacher;
 
-    private LocalDateTime bookingDate;
+    @DateTimeFormat(pattern = "dd.MM.yyyy")
+    private LocalDate bookingDate;
 }
