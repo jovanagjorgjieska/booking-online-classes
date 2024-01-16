@@ -16,38 +16,12 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
-public class TeacherService implements UserService {
+public class TeacherService extends UserService {
 
-    private final BaseUserRepository baseUserRepository;
-    private final PasswordEncoder passwordEncoder;
-
-    @Override
-    public BaseUser getUserById(Long id) {
-        return this.baseUserRepository.findById(id)
-                .orElseThrow(() -> new TeacherNotFoundException(id));
+    public TeacherService(BaseUserRepository baseUserRepository, PasswordEncoder passwordEncoder) {
+        super(baseUserRepository, passwordEncoder);
     }
 
-    @Override
-    public BaseUser getUserByEmail(String email) {
-        return this.baseUserRepository.findByEmail(email)
-                .orElseThrow(() -> new TeacherNotFoundException(email));
-    }
-
-    @Override
-    public BaseUser createUser(RegisterRequest user) {
-        BaseUser newTeacher = new BaseUser();
-        newTeacher.setEmail(user.getEmail());
-        newTeacher.setPassword(passwordEncoder.encode(user.getPassword()));
-        newTeacher.setFirstName(user.getFirstName());
-        newTeacher.setLastName(user.getLastName());
-        newTeacher.setUserRole(UserRole.valueOf(user.getRole()));
-        newTeacher.setPhoneNumber(user.getPhoneNumber());
-
-        return this.baseUserRepository.save(newTeacher);
-    }
-
-    @Override
     public BaseUser updateUser(Long userId, BaseUser user) {
         Optional<BaseUser> teacher = this.baseUserRepository.findById(userId);
 
@@ -68,16 +42,6 @@ public class TeacherService implements UserService {
                 teacher.get().setPhoneNumber(user.getPhoneNumber());
 
             return this.baseUserRepository.save(teacher.get());
-        } else {
-            throw new TeacherNotFoundException(userId);
-        }
-    }
-
-    @Override
-    public void deleteUser(Long userId) {
-        Optional<BaseUser> teacherToRemove = this.baseUserRepository.findById(userId);
-        if(teacherToRemove.isPresent()) {
-            this.baseUserRepository.delete(teacherToRemove.get());
         } else {
             throw new TeacherNotFoundException(userId);
         }

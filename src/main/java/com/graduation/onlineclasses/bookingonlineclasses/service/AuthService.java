@@ -32,6 +32,7 @@ public class AuthService {
         var token = jwtIssuer.issue(principal.getUserId(), principal.getEmail(), roles);
         return LoginResponse.builder()
                 .accessToken(token)
+                .email(email)
                 .build();
     }
 

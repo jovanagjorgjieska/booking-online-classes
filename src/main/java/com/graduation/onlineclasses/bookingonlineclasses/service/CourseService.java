@@ -44,7 +44,7 @@ public class CourseService {
         course.setAvailablePositions(courseDTO.getAvailablePositions());
         course.setCourseType(CourseType.valueOf(courseDTO.getCourseType()));
         course.setCourseCategory(CourseCategory.valueOf(courseDTO.getCourseCategory()));
-        course.setPrice(courseDTO.getPrice());
+        course.setPrice((double) courseDTO.getPrice());
 
         this.courseRepository.save(course);
 
@@ -61,7 +61,7 @@ public class CourseService {
             if (courseDTO.getDescription() != null)
                 course.get().setDescription(courseDTO.getDescription());
             if (courseDTO.getPrice() != null)
-                course.get().setPrice(courseDTO.getPrice());
+                course.get().setPrice((double) courseDTO.getPrice());
             if (courseDTO.getAvailablePositions() != null)
                 course.get().setAvailablePositions(courseDTO.getAvailablePositions());
             if (courseDTO.getCourseType() != null)

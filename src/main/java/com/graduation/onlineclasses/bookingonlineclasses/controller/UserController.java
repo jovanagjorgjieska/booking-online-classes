@@ -8,6 +8,7 @@ import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.UserRole;
 import com.graduation.onlineclasses.bookingonlineclasses.service.AuthService;
 import com.graduation.onlineclasses.bookingonlineclasses.service.StudentService;
 import com.graduation.onlineclasses.bookingonlineclasses.service.TeacherService;
+import com.graduation.onlineclasses.bookingonlineclasses.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,19 +20,18 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final TeacherService teacherService;
-    private final StudentService studentService;
+    private final UserService userService;
     private final AuthService authService;
+
+    @GetMapping("/{email}")
+    public ResponseEntity<BaseUser> fetchUserByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(this.userService.getUserByEmail(email));
+    }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest user) {
-        if (user.getRole().equals(UserRole.STUDENT.toString())) {
-            BaseUser createdStudent = this.studentService.createUser(user);
+            BaseUser createdStudent = this.userService.createUser(user);
             return new ResponseEntity<>(createdStudent, HttpStatus.CREATED);
-        } else {
-            BaseUser createdTeacher = this.teacherService.createUser(user);
-            return new ResponseEntity<>(createdTeacher, HttpStatus.CREATED);
-        }
     }
 
     @PostMapping("/login")
