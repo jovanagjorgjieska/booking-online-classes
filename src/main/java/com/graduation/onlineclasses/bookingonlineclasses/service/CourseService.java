@@ -40,6 +40,7 @@ public class CourseService {
         course.setTeacher(teacher);
         course.setCourseName(courseDTO.getCourseName());
         course.setDescription(courseDTO.getDescription());
+        course.setDetails(courseDTO.getDetails());
         course.setBookedPositions(0);
         course.setAvailablePositions(courseDTO.getAvailablePositions());
         course.setCourseType(CourseType.valueOf(courseDTO.getCourseType()));
@@ -60,6 +61,8 @@ public class CourseService {
                 course.get().setCourseName(courseDTO.getCourseName());
             if (courseDTO.getDescription() != null)
                 course.get().setDescription(courseDTO.getDescription());
+            if (courseDTO.getDetails() != null)
+                course.get().setDetails(courseDTO.getDetails());
             if (courseDTO.getPrice() != null)
                 course.get().setPrice((double) courseDTO.getPrice());
             if (courseDTO.getAvailablePositions() != null)

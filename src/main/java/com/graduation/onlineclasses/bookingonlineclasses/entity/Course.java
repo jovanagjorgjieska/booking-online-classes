@@ -22,7 +22,11 @@ public class Course {
 
     private String courseName;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Column(columnDefinition = "TEXT")
+    private String details;
 
     private Integer bookedPositions;
 
