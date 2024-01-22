@@ -42,7 +42,7 @@ public class Course {
 
     @JsonIgnore
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-    private List<Booking> bookings;
+    private List<Enrollment> enrollments;
 
     @JsonIgnore
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)

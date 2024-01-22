@@ -4,10 +4,7 @@ import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.Register
 import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.LoginRequest;
 import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.LoginResponse;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.BaseUser;
-import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.UserRole;
 import com.graduation.onlineclasses.bookingonlineclasses.service.AuthService;
-import com.graduation.onlineclasses.bookingonlineclasses.service.StudentService;
-import com.graduation.onlineclasses.bookingonlineclasses.service.TeacherService;
 import com.graduation.onlineclasses.bookingonlineclasses.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

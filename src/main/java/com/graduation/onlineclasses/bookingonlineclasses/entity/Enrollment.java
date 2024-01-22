@@ -8,11 +8,11 @@ import java.time.LocalDate;
 
 @Entity
 @Data
-public class Booking {
+public class Enrollment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long bookingId;
+    private Long enrollmentId;
 
     @ManyToOne
     @JoinColumn(name = "courseId", nullable = false)
@@ -27,5 +27,5 @@ public class Booking {
     private BaseUser teacher;
 
     @DateTimeFormat(pattern = "dd.MM.yyyy")
-    private LocalDate bookingDate;
+    private LocalDate enrollmentDate;
 }

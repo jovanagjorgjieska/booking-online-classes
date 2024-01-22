@@ -31,9 +31,9 @@ public class CustomExceptionHandler {
     }
 
     @ResponseBody
-    @ExceptionHandler(BookingNotFoundException.class)
+    @ExceptionHandler(EnrollmentNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String bookingNotFoundException(BookingNotFoundException e) {
+    String enrollmentNotFoundException(EnrollmentNotFoundException e) {
         return e.getMessage();
     }
 

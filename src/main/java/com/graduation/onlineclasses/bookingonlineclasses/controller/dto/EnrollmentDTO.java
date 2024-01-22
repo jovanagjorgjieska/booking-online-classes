@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class BookingDTO {
+public class EnrollmentDTO {
 
     private Long studentId;
     private Long teacherId;

@@ -39,11 +39,11 @@ public class BaseUser {
 
     @JsonIgnore
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL)
-    private List<Booking> teacherBookings;
+    private List<Enrollment> teacherEnrollments;
 
     @JsonIgnore
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private List<Booking> studentBookings;
+    private List<Enrollment> studentEnrollments;
 
     @JsonIgnore
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
