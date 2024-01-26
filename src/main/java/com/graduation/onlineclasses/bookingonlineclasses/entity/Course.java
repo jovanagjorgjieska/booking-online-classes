@@ -47,4 +47,20 @@ public class Course {
     @JsonIgnore
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<Review> reviews;
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "courseId=" + courseId +
+                ", teacher=" + (teacher != null ? teacher.getUserId() : null) +
+                ", courseName='" + courseName + '\'' +
+                ", description='" + description + '\'' +
+                ", details='" + details + '\'' +
+                ", bookedPositions=" + bookedPositions +
+                ", availablePositions=" + availablePositions +
+                ", courseType=" + courseType +
+                ", courseCategory=" + courseCategory +
+                ", price=" + price +
+                '}';
+    }
 }
