@@ -31,21 +31,14 @@ public class ReviewService {
         return this.reviewRepository.findAllByCourse(course);
     }
 
-    public List<Review> getAllReviewsByStudent (Long studentId) {
-        BaseUser student = this.studentService.getUserById(studentId);
-
-        return this.reviewRepository.findAllByStudent(student);
-    }
-
     //TODO: Add validation for the score range
     //TODO: Add validation if the student participated the course
     public Review createReview (ReviewDTO reviewDTO) {
         Course course = this.courseService.getCourse(reviewDTO.getCourseId());
-        BaseUser student = this.studentService.getUserById(reviewDTO.getStudentId());
 
         Review review = new Review();
         review.setCourse(course);
-        review.setStudent(student);
+        review.setAuthor(reviewDTO.getAuthor());
         review.setDescription(reviewDTO.getDescription());
         review.setScore(reviewDTO.getScore());
 

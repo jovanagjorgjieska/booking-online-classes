@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 public class ReviewDTO {
 
-    private Long studentId;
+    private String author;
     private Long courseId;
     private Integer score;
     private String description;

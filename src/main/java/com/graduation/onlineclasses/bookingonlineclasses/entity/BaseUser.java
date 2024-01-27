@@ -44,8 +44,4 @@ public class BaseUser {
     @JsonIgnore
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Enrollment> studentEnrollments;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private List<Review> reviews;
 }

@@ -29,11 +29,6 @@ public class ReviewController {
         return ResponseEntity.ok(this.reviewService.getAllReviewsByCourse(courseId));
     }
 
-    @GetMapping("/student/{studentId}")
-    public ResponseEntity<List<Review>> getReviewsByStudent (@PathVariable Long studentId) {
-        return ResponseEntity.ok(this.reviewService.getAllReviewsByStudent(studentId));
-    }
-
     @PostMapping
     public ResponseEntity<Review> addReview (@RequestBody ReviewDTO reviewDTO) {
         Review review = this.reviewService.createReview(reviewDTO);

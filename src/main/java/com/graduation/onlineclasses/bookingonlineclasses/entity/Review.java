@@ -11,9 +11,7 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long reviewId;
 
-    @ManyToOne
-    @JoinColumn(name = "studentId", nullable = false)
-    private BaseUser student;
+    private String author;
 
     @ManyToOne
     @JoinColumn(name = "courseId", nullable = false)
