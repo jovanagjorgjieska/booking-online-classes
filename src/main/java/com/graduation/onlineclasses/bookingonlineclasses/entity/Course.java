@@ -40,6 +40,8 @@ public class Course {
 
     private Double price;
 
+    private Float rating;
+
     @JsonIgnore
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<Enrollment> enrollments;

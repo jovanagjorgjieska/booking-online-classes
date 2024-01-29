@@ -1,7 +1,6 @@
 package com.graduation.onlineclasses.bookingonlineclasses.service;
 
 import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.ReviewDTO;
-import com.graduation.onlineclasses.bookingonlineclasses.entity.BaseUser;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Course;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Review;
 import com.graduation.onlineclasses.bookingonlineclasses.exception.ReviewNotFoundException;
@@ -17,7 +16,6 @@ import java.util.Optional;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final StudentService studentService;
     private final CourseService courseService;
 
     public Review getReviewById (Long id) {
@@ -42,6 +40,7 @@ public class ReviewService {
         review.setDescription(reviewDTO.getDescription());
         review.setScore(reviewDTO.getScore());
 
+        courseService.updateCourseRating(course.getCourseId());
         return this.reviewRepository.save(review);
     }
 

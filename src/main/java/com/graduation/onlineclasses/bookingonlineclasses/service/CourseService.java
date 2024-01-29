@@ -3,6 +3,7 @@ package com.graduation.onlineclasses.bookingonlineclasses.service;
 import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.CourseDTO;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.BaseUser;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Course;
+import com.graduation.onlineclasses.bookingonlineclasses.entity.Review;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.CourseCategory;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.CourseType;
 import com.graduation.onlineclasses.bookingonlineclasses.exception.CourseNotFoundException;
@@ -10,6 +11,7 @@ import com.graduation.onlineclasses.bookingonlineclasses.repository.CourseReposi
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -111,5 +113,20 @@ public class CourseService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid CourseCategory or CourseType value");
         }
+    }
+
+    public void updateCourseRating(Long courseId) {
+        Course course = this.getCourse(courseId);
+
+        List<Review> courseReviews = course.getReviews();
+        float totalScore = 0;
+        int reviewNumber = 0;
+
+        for (Review r : courseReviews) {
+            totalScore += r.getScore();
+            reviewNumber ++;
+        }
+
+        course.setRating(totalScore / reviewNumber);
     }
 }
