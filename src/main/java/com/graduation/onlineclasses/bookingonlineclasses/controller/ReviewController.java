@@ -19,6 +19,11 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
+    @GetMapping
+    public ResponseEntity<List<Review>> getAllReviews() {
+        return ResponseEntity.ok(this.reviewService.getAllReviews());
+    }
+
     @GetMapping("/{reviewId}")
     public ResponseEntity<Review> getReview (@PathVariable Long reviewId) {
         return ResponseEntity.ok(this.reviewService.getReviewById(reviewId));

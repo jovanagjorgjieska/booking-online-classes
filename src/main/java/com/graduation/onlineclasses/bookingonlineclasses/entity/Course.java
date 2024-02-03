@@ -3,6 +3,7 @@ package com.graduation.onlineclasses.bookingonlineclasses.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.CourseCategory;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.CourseType;
+import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.UploadStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -28,7 +29,7 @@ public class Course {
     @Column(columnDefinition = "TEXT")
     private String details;
 
-    private Integer bookedPositions;
+    private Integer totalPositions;
 
     private Integer availablePositions;
 
@@ -41,6 +42,9 @@ public class Course {
     private Double price;
 
     private Float rating;
+
+    @Enumerated(EnumType.STRING)
+    private UploadStatus courseUploadStatus;
 
     @JsonIgnore
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
@@ -58,7 +62,7 @@ public class Course {
                 ", courseName='" + courseName + '\'' +
                 ", description='" + description + '\'' +
                 ", details='" + details + '\'' +
-                ", bookedPositions=" + bookedPositions +
+                ", totalPositions=" + totalPositions +
                 ", availablePositions=" + availablePositions +
                 ", courseType=" + courseType +
                 ", courseCategory=" + courseCategory +

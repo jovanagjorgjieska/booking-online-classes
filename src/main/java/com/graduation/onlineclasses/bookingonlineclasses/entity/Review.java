@@ -1,5 +1,6 @@
 package com.graduation.onlineclasses.bookingonlineclasses.entity;
 
+import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.UploadStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,4 +21,7 @@ public class Review {
     private Integer score;
 
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    private UploadStatus reviewUploadStatus;
 }

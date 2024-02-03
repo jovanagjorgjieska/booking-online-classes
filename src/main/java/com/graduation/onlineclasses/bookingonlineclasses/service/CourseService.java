@@ -6,12 +6,12 @@ import com.graduation.onlineclasses.bookingonlineclasses.entity.Course;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Review;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.CourseCategory;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.CourseType;
+import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.UploadStatus;
 import com.graduation.onlineclasses.bookingonlineclasses.exception.CourseNotFoundException;
 import com.graduation.onlineclasses.bookingonlineclasses.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,11 +43,12 @@ public class CourseService {
         course.setCourseName(courseDTO.getCourseName());
         course.setDescription(courseDTO.getDescription());
         course.setDetails(courseDTO.getDetails());
-        course.setBookedPositions(0);
-        course.setAvailablePositions(courseDTO.getAvailablePositions());
+        course.setTotalPositions(courseDTO.getTotalPositions());
+        course.setAvailablePositions(courseDTO.getTotalPositions());
         course.setCourseType(CourseType.valueOf(courseDTO.getCourseType()));
         course.setCourseCategory(CourseCategory.valueOf(courseDTO.getCourseCategory()));
         course.setPrice((double) courseDTO.getPrice());
+        course.setCourseUploadStatus(UploadStatus.PENDING);
 
         this.courseRepository.save(course);
 
@@ -67,8 +68,8 @@ public class CourseService {
                 course.get().setDetails(courseDTO.getDetails());
             if (courseDTO.getPrice() != null)
                 course.get().setPrice((double) courseDTO.getPrice());
-            if (courseDTO.getAvailablePositions() != null)
-                course.get().setAvailablePositions(courseDTO.getAvailablePositions());
+            if (courseDTO.getTotalPositions() != null)
+                course.get().setTotalPositions(courseDTO.getTotalPositions());
             if (courseDTO.getCourseType() != null)
                 course.get().setCourseType(CourseType.valueOf(courseDTO.getCourseType()));
             if (courseDTO.getCourseCategory() != null)
@@ -89,7 +90,7 @@ public class CourseService {
         }
     }
 
-    public void changeCourseAvailableAndBookedPositions(Long courseId, Integer availablePositions, Integer bookedPositions) {
+    public void changeCourseAvailablePositions(Long courseId, Integer availablePositions) {
         Course course = this.getCourse(courseId);
 
         course.setAvailablePositions(availablePositions);
@@ -128,5 +129,6 @@ public class CourseService {
         }
 
         course.setRating(totalScore / reviewNumber);
+        this.courseRepository.save(course);
     }
 }

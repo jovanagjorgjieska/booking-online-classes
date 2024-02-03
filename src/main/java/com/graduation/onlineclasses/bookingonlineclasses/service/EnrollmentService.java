@@ -59,9 +59,8 @@ public class EnrollmentService {
         enrollment.setStudent(student);
         enrollment.setEnrollmentDate(LocalDate.now());
 
-        this.courseService.changeCourseAvailableAndBookedPositions(course.getCourseId(),
-                course.getAvailablePositions() -1,
-                course.getBookedPositions() + 1);
+        this.courseService.changeCourseAvailablePositions(course.getCourseId(),
+                course.getAvailablePositions() - 1);
 
         return this.enrollmentRepository.save(enrollment);
     }
@@ -71,9 +70,8 @@ public class EnrollmentService {
         Optional<Enrollment> enrollment = this.enrollmentRepository.findById(enrollmentId);
 
         if (enrollment.isPresent()) {
-            this.courseService.changeCourseAvailableAndBookedPositions(enrollment.get().getCourse().getCourseId(),
-                    enrollment.get().getCourse().getAvailablePositions() + 1,
-                    enrollment.get().getCourse().getBookedPositions() - 1);
+            this.courseService.changeCourseAvailablePositions(enrollment.get().getCourse().getCourseId(),
+                    enrollment.get().getCourse().getAvailablePositions() + 1);
             this.enrollmentRepository.delete(enrollment.get());
         } else {
             throw new EnrollmentNotFoundException(enrollmentId);

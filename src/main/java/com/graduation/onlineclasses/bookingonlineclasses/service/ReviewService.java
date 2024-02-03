@@ -3,6 +3,7 @@ package com.graduation.onlineclasses.bookingonlineclasses.service;
 import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.ReviewDTO;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Course;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Review;
+import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.UploadStatus;
 import com.graduation.onlineclasses.bookingonlineclasses.exception.ReviewNotFoundException;
 import com.graduation.onlineclasses.bookingonlineclasses.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,10 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final CourseService courseService;
+
+    public List<Review> getAllReviews () {
+        return this.reviewRepository.findAll();
+    }
 
     public Review getReviewById (Long id) {
         return this.reviewRepository.findById(id)
@@ -39,8 +44,8 @@ public class ReviewService {
         review.setAuthor(reviewDTO.getAuthor());
         review.setDescription(reviewDTO.getDescription());
         review.setScore(reviewDTO.getScore());
+        review.setReviewUploadStatus(UploadStatus.PENDING);
 
-        courseService.updateCourseRating(course.getCourseId());
         return this.reviewRepository.save(review);
     }
 
