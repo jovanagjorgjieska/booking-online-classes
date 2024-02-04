@@ -4,6 +4,7 @@ import com.graduation.onlineclasses.bookingonlineclasses.controller.dto.Enrollme
 import com.graduation.onlineclasses.bookingonlineclasses.entity.BaseUser;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Enrollment;
 import com.graduation.onlineclasses.bookingonlineclasses.entity.Course;
+import com.graduation.onlineclasses.bookingonlineclasses.entity.enums.CourseType;
 import com.graduation.onlineclasses.bookingonlineclasses.exception.EnrollmentNotFoundException;
 import com.graduation.onlineclasses.bookingonlineclasses.repository.EnrollmentRepository;
 import lombok.RequiredArgsConstructor;
@@ -59,8 +60,10 @@ public class EnrollmentService {
         enrollment.setStudent(student);
         enrollment.setEnrollmentDate(LocalDate.now());
 
-        this.courseService.changeCourseAvailablePositions(course.getCourseId(),
-                course.getAvailablePositions() - 1);
+        if (course.getCourseType().equals(CourseType.GROUP)) {
+            this.courseService.changeCourseAvailablePositions(course.getCourseId(),
+                    course.getAvailablePositions() - 1);
+        }
 
         return this.enrollmentRepository.save(enrollment);
     }
@@ -70,8 +73,10 @@ public class EnrollmentService {
         Optional<Enrollment> enrollment = this.enrollmentRepository.findById(enrollmentId);
 
         if (enrollment.isPresent()) {
-            this.courseService.changeCourseAvailablePositions(enrollment.get().getCourse().getCourseId(),
-                    enrollment.get().getCourse().getAvailablePositions() + 1);
+            if (enrollment.get().getCourse().getCourseType().equals(CourseType.GROUP)) {
+                this.courseService.changeCourseAvailablePositions(enrollment.get().getCourse().getCourseId(),
+                        enrollment.get().getCourse().getAvailablePositions() + 1);
+            }
             this.enrollmentRepository.delete(enrollment.get());
         } else {
             throw new EnrollmentNotFoundException(enrollmentId);
